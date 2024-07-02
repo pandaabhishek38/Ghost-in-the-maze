@@ -66,7 +66,10 @@ Sample success case and failure case scenarios of Agent 1’s path is depicted b
 
 
 -Green area represents the unblocked cells where the agent can go
+
 -Red area represents the blocked cells
+
 -Black spots are the ghosts that move around in the maze space
+
 -Blue line represents the path the agent has taken
 
