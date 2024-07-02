@@ -6,7 +6,7 @@ The project consists of a maze-like square grid. Some of the cells are blocked a
 # IMPLMENTATION
 ## 1. MAZE
 We randomly generated a 51 x 51 square grid maze. The probability of each cell being blocked is 0.28 and the probability of each cell being unblocked is 0.72. The agent is free to move through the unblocked cells but cannot enter a blocked cell.
-
+hello
 Our code flow for maze creation starts with a call to create_maze() function of mazes() class. The create_maze() function acts like the master function to create the mazes. Code flow for maze creation as be briefly described using the following steps:
 
 1. Call to create_maze()
@@ -160,19 +160,77 @@ In case there is a ghost in the grid, we decide our next move based on the locat
 If a ghost is in the same column of the agent and below it, the agent will avoid moving downwards. The possible paths are either moving up, left or to the right cell. The agent checks which of them are unblocked and then move to one of them. Again, as our goal node is almost always towards the right side or bottom side, we give preference to the rightmost cell in this case (ghost is below so cannot go there) since it will move the agent closer to the goal and further away from the ghost. If the ghost is in the bottom left section of the grid, the agent avoids moving to the bottom or the left cell, since either of them would move us closer to the ghost or either of them could have ghost in them in the after this step. So, the possible move would be the top cell or the right cell. Preference is given to the right cell once again. In case the ghost is in the bottom right section of the grid, the agent avoids the bottom or the right cell and tries to move to the left or the top cell.
 
 Similarly, the following mapping is done so the agent tries to avoid the ghost in the grid:
+
 • If ghost is in same column and on the bottom side
-o Agent tries to move to move right, left, or up in that order of preference
+
+  o Agent tries to move to move right, left, or up in that order of preference
+  
 • If ghost is in the same column and on the top side
-o Agent tries to move to move down, right, or left in that order of preference
+
+  o Agent tries to move to move down, right, or left in that order of preference
+  
 • If ghost is in the same row and on the left side
-o Agent tries to move to move right, down, or up in that order of preference
+
+  o Agent tries to move to move right, down, or up in that order of preference
+  
 • If ghost is in the same row and on the right side
-o Agent tries to move to move down, up, or left in that order of preference
+
+  o Agent tries to move to move down, up, or left in that order of preference
+  
 • If ghost is in the top-right section of the grid
-o Agent tries to move to move left, or down in that order of preference
+
+  o Agent tries to move to move left, or down in that order of preference
+  
 • If ghost is in the top-left section of the grid
-o Agent tries to move to move right, or down in that order of preference
+
+  o Agent tries to move to move right, or down in that order of preference
+  
 • If ghost is in the bottom-right section of the grid
-o Agent tries to move to move left, or up in that order of preference
+
+  o Agent tries to move to move left, or up in that order of preference
+  
 • If ghost is in the bottom-left section of the grid
-o Agent tries to move to move right, or up in that order of preference
+
+  o Agent tries to move to move right, or up in that order of preference
+
+The code iterates through the list of all ghosts and checks if they are within the 5X5 grid. If they are, the agent updates it next cell for the current step. The order of preference is simply definedby the order of (x,y) coordinates passed on to choose_cell() function of the Agent4 class. The coordinates mentioned at the last position of this array of viable options is given the maximum preference. If that cell is not available, then its previous cell is given the next preference as per the iteration.
+
+The question may arise as to why we chose a 5x5 grid and not a 3x3 grid because for a 3x3 grid, in case the ghost is detected in the grid, it will exist in the immediate next cell of the agent. This makes it the approach very risky.
+
+Let’s take an example of a ghost in the same row on the right side of the grid.
+In our 5X5 grid, the ghost can either move to the top, bottom, or the left cell in order to avoid the ghost. But in a 3X3 grid, our options are narrowed down to just one cell, that it, the left cell in this case. But, if the left cell is blocked, then our agent’s death is guaranteed. This will not happen in a 5X5 grid as our algorithm will detect the ghost one step before the 3X3 grid. Hence, giving our agent one more step to save itself. We cannot use 4x4 matrix grid either as the agent will not be located in the center of the grid due to the even number of cells in the grid. Hence, we make use of a 5x5 in our algorithm.
+
+Sample success case and failure case scenarios of Agent 4’s path is depicted below:
+
+- Green area represents the unblocked cells where the agent can go
+
+- Red area represents the blocked cells
+  
+- Black spots are the ghosts that move around in the maze space
+  
+- Blue line represents the path the agent has taken
+
+![New Note](https://github.com/pandaabhishek38/Ghost-in-the-maze/assets/56110423/d533f645-6ed3-4753-8161-34be6bfa9590)
+
+[Output of the success and failure case is included in the zip file under Outputs folder]
+
+Varying ghosts from 10 to 220 by incrementing 10 ghosts and running the agent for 100 mazes, we get the below graph of Agent 4’s survivability.
+
+![New Note](https://github.com/pandaabhishek38/Ghost-in-the-maze/assets/56110423/0538d833-b166-4e51-9014-a32385bbc30b)
+
+Agent 4 has a survivability of 100% when the number of ghosts is 10. This is way better than agent 1, 2 and 3. The chance of survival starts reducing when we increment the number of ghosts. We increase the ghosts in increments of 10. Survivability goes down by only 1% when we increase the number of ghosts to 20. It goes down to 91% when we increase the number of ghosts to 30.Survivability goes down to 0% when the number of ghosts goes up to 220.
+
+How did our Agent 4 stack up against the others? Why did it succeed, or why did it fail?
+
+Comparing Agent 4 to Agent 1, Agent 2, and Agent 3:
+
+For 10 ghosts, Agent 4’s survivability is 100% for 100 runs whereas Agent 1’s survivability is 86%, Agent 2’s survivability is 89%, and Agent 3’s survivability is 80%. Comparing these values at 10 ghosts, we can roughly determine that Agent 4 beats Agent 1, 2, and 3 at a smaller number of ghosts.
+
+Now going further down the line and checking their survivability at 210 ghosts. Agent 4’s survivability is 2% for 100 runs whereas Agent 1’s survivability is 1%, Agent 2’s survivability is 1%, and Agent 3’s survivability is 1%. Even at this point, Agent 4 beats all other agents even for a large number of ghosts.
+
+While Agent 4’s survivability for 220 ghosts is 0% and that of Agent 1 is 1% but considering that agent 1 moves even trying to avoid the ghosts, we can assume that luck played out in this case and can treat it as an anomaly.
+
+Furthermore, if we look at the combined survivability graph of all the agents at the very last page of the report, we can determine that Agent 4 and Agent 5 have dominated and outperformed the first three agents most of the times.
+
+If we look at the approach, we have taken for Agent 1, Agents 2, and Agent 3, then we may notice one thing that while computing path for these agents, we have treated cells with ghosts as blocked cells and tried to find the shortest path around them. However, in our agent 4, we track ghosts in the 5X5 grid and actively try to move the agent 4 away from the ghost. This decision of moving away from the ghost instead of taking risk and proceeding with the shortest path seems to have contributed to Agent 4’s survivability. Hence, it performed better that Agent 1, 2, and 3.
+
