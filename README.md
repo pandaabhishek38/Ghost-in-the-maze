@@ -6,7 +6,7 @@ The project consists of a maze-like square grid. Some of the cells are blocked a
 # IMPLMENTATION
 ## 1. MAZE
 We randomly generated a 51 x 51 square grid maze. The probability of each cell being blocked is 0.28 and the probability of each cell being unblocked is 0.72. The agent is free to move through the unblocked cells but cannot enter a blocked cell.
-hello
+hell
 Our code flow for maze creation starts with a call to create_maze() function of mazes() class. The create_maze() function acts like the master function to create the mazes. Code flow for maze creation as be briefly described using the following steps:
 
 1. Call to create_maze()
