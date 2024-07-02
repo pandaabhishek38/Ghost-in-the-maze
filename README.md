@@ -17,11 +17,14 @@ If the number is <= 0.72, we mark the cell as unblocked. Else, we mark it as blo
 Since every auto-generated maze need not be a good maze, that is, there might be some mazes where it is impossible to reach the goal node (50,50) from the start node (0,0). We reject these mazes and generate another maze until we have a solvable maze. To validate whether there is a path from the start node to the end node, we used Depth-First Search (DFS) algorithm in the validate_maze() function.
 
 DFS vs Dijkstra’s algorithm
+
 Let us first compare DFS and Dijkstra's algorithms according to our problem statement.
 In general, if we know that the endpoint (50,50) is far away from the start-point (0,0), DFS is a good strategy as it picks a path and proceed along that path until it ends or until we reach the goal node. Dijkstra's algorithm is in general a good way to find the shortest possible path.
 
 However, please note that the sole purpose of validating the maze is not to find the shortest path, but it is just to very whether the maze is solvable or not. So, as per the problem description, we chose DFS over Dijkstra’s algorithm to verify the maze.
+
 DFS vs BFS
+
 Breadth-Frist search is usually a good way to find a path, but it is considered better than DFS when the goal node is at a shallow level when compared to the entire environment over which we search. However, in our case, we know that the start node is at (0,0) and the goal node is at (50,50), that is, two points that cannot be further away from each other in our project’s environment. Because of this, choosing DFS over BFS is a better idea as BFS would take more time and it will first keep on expanding all the neighboring cells of the maze whereas we know that we need to go to the other end.
 
 ## 2. GHOSTS
