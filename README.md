@@ -117,3 +117,62 @@ Varying ghosts from 10 to 220 by incrementing 10 ghosts and running the agent fo
 
 Agent 2 starts with survivability of 89%, a 3% improvement compared to agent 1. As seen in the previous agent, the chances of survival starts decreasing as we increase the number of ghosts. It goes down to 73% when we increment the ghosts to 20. It goes down by a further 1% when we increase the number of ghosts to 30. It converges down to 0% when the number of ghosts are 220.
 
+## Agent 3
+
+Agent 3 can be considered as further extension of agent 2. In this strategy, the agent predicts the future states of the maze if it picked and went to one cell. The agent checks its survivability if it chooses to go to its neighboring cell or even if it stays in the same place, that it, it checks its survivability for its current position, top, left, right, and the bottom cells, and then picks the best possible option as the next cell/step.
+
+For all of the 5 cells, the agent 3 does 5 simulations, that is, 25 simulations at each step in total to choose the next cell. For each simulation, the agent 3 calls agent 2’s code and tries to simulate the next 5 steps. The agent considers that its current position is either the same cell, or one of its neighboring cells, and then it follows agent 2’s approach of re-calculating the shortest path at every step using A* algorithm for the next 5 steps. At the end of every simulation of each cell, the agent3 updates a list counter success_sum for each of the 5 cells to map how many times did the agent
+survive in the simulation from a particular cell.
+
+After all the simulations, the agent 3 then chooses the cell with the highest survivability counter value, proceeds ahead, and repeats the same until it reaches the goal node.
+
+However, we know that for every maze, the agent 3 has to go from (0,0) to (50,50), that is, from the top-left cell to the bottom-right cell. So, we created a little bias that helps us go in the bottom or right direction in case of a tie. In this manner, even if there are multiple cells with the same survivability counter in agent 3, it will pick either right or bottom cells over the left, top, and current cells and the agent proceeds towards the area which we know is closer to the goal node.
+
+In case the agent 3 dies in all of the simulations, that is, if the survivability counter for all cases of simulations is 0, it reverts back to agent 2’s approach and calculates the shortest path from the current cell to the goal node using A* and follows that for 1 step. After that turn, it again runs 5 simulations on each of its neighboring cells and and chooses the next cell based on the counter containing survivability of the simulations.
+
+In Agent 3, we noticed that in some cases, the agent toggles multiple times between two given cells and doesn’t move forward. To avoid this, we have put a threshold on the number of times the agent can visit a particular cell. So, if the agent chooses the next cell based on simulations and it that cell has already been visited 5 times by the agent, then the agent again follows agent 2’s approach by finding the shortest path from the current step and follow that path for 1 step. In many instances, we have observed that by doing so, the agent 3 comes out of that toggle in about 2-3 steps.
+
+Sample success case and failure case scenarios of Agent 3’s path is depicted below:
+
+- Green area represents the unblocked cells where the agent can go
+- Red area represents the blocked cells
+- Black spots are the ghosts that move around in the maze space
+- Blue line represents the path the agent has taken
+
+![New Note](https://github.com/pandaabhishek38/Ghost-in-the-maze/assets/56110423/91a0d280-517f-40d0-9e0a-d0d8a5083f94)
+
+[Output of the success and failure case is included in the zip file under Outputs folder]
+
+Varying ghosts from 10 to 50 by incrementing 10 ghosts and running the agent for 30 mazes, we get the below graph of Agent 3’s survivability.
+
+Note: Running agent 3 in general is a computation heavy process and takes a lot of time. So, we have ran the agent only on 30 iterations per ghost size.
+
+![New Note](https://github.com/pandaabhishek38/Ghost-in-the-maze/assets/56110423/41daa1fd-ac8b-46ff-806b-9aaf31f2ba63)
+
+Agent 3 starts with a survivability of 80%. As we increase the number of ghosts, the survivability goes down drastically. It goes down to 63.33% when we increment the number of ghosts to 20. When we increase the number of ghosts to 30, our survivability goes down to 30%. It increases, however, to 36.67% when we increment our number of ghosts to 40. Survivability is 30% for 50 ghosts.
+
+## 4. Agent 4
+
+As per the project writeup, we had to create the agent 4 with our own approach and try to make it better than the previous three agents. For this strategy, we create a 5 x 5 grid around the agent with the agent at the center of the grid. Throughout all the agents, we use a python dictionary to keep a track of the ghosts in the maze. Using this dictionary, we check for the existence of the ghosts in this 5X5 grid. If there are no ghosts in the grid, the agent simply calculates the shortest path to the goal node using A* algorithm at that step to get the next cell and moves to that. In the next turn, it will again check for ghosts in the 5X5 grid and repeat the process. The existence of the ghosts are taken under consideration while calculating the shortest path. In this way, it incorporates the strategy of agent 2 if there are no ghosts in the 5 x 5 grid.
+
+In case there is a ghost in the grid, we decide our next move based on the location of the ghost. The idea is to move away from the ghost as far as possible to reduce the chance of our agent’s death. We have mapped multiple cases in the code to avoid ghosts in the 5X5 grid.
+
+If a ghost is in the same column of the agent and below it, the agent will avoid moving downwards. The possible paths are either moving up, left or to the right cell. The agent checks which of them are unblocked and then move to one of them. Again, as our goal node is almost always towards the right side or bottom side, we give preference to the rightmost cell in this case (ghost is below so cannot go there) since it will move the agent closer to the goal and further away from the ghost. If the ghost is in the bottom left section of the grid, the agent avoids moving to the bottom or the left cell, since either of them would move us closer to the ghost or either of them could have ghost in them in the after this step. So, the possible move would be the top cell or the right cell. Preference is given to the right cell once again. In case the ghost is in the bottom right section of the grid, the agent avoids the bottom or the right cell and tries to move to the left or the top cell.
+
+Similarly, the following mapping is done so the agent tries to avoid the ghost in the grid:
+• If ghost is in same column and on the bottom side
+o Agent tries to move to move right, left, or up in that order of preference
+• If ghost is in the same column and on the top side
+o Agent tries to move to move down, right, or left in that order of preference
+• If ghost is in the same row and on the left side
+o Agent tries to move to move right, down, or up in that order of preference
+• If ghost is in the same row and on the right side
+o Agent tries to move to move down, up, or left in that order of preference
+• If ghost is in the top-right section of the grid
+o Agent tries to move to move left, or down in that order of preference
+• If ghost is in the top-left section of the grid
+o Agent tries to move to move right, or down in that order of preference
+• If ghost is in the bottom-right section of the grid
+o Agent tries to move to move left, or up in that order of preference
+• If ghost is in the bottom-left section of the grid
+o Agent tries to move to move right, or up in that order of preference
