@@ -73,3 +73,5 @@ Sample success case and failure case scenarios of Agent 1’s path is depicted b
 
 -Blue line represents the path the agent has taken
 
+![Agent 1 Survivability Graph](https://github.com/pandaabhishek38/Ghost-in-the-maze/assets/56110423/e68c9ec3-8826-42f5-bde2-55b1776b0f1e)
+
