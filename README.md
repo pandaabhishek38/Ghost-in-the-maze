@@ -73,5 +73,11 @@ Sample success case and failure case scenarios of Agent 1’s path is depicted b
 
 -Blue line represents the path the agent has taken
 
+![New Note](https://github.com/pandaabhishek38/Ghost-in-the-maze/assets/56110423/454662ca-be09-417f-8ad8-b56661d208de)
+
+[Output of the success and failure case is included in the zip file under Outputs folder]
+
+Varying ghosts from 10 to 220 by incrementing 10 ghosts and running the agent for 100 mazes, we get the below graph of Agent 1’s survivability
+
 ![Agent 1 Survivability Graph](https://github.com/pandaabhishek38/Ghost-in-the-maze/assets/56110423/e68c9ec3-8826-42f5-bde2-55b1776b0f1e)
 
