@@ -6,7 +6,7 @@ The project consists of a maze-like square grid. Some of the cells are blocked a
 # IMPLMENTATION
 ## 1. MAZE
 We randomly generated a 51 x 51 square grid maze. The probability of each cell being blocked is 0.28 and the probability of each cell being unblocked is 0.72. The agent is free to move through the unblocked cells but cannot enter a blocked cell.
-hell
+
 Our code flow for maze creation starts with a call to create_maze() function of mazes() class. The create_maze() function acts like the master function to create the mazes. Code flow for maze creation as be briefly described using the following steps:
 
 1. Call to create_maze()
@@ -135,8 +135,11 @@ In Agent 3, we noticed that in some cases, the agent toggles multiple times betw
 Sample success case and failure case scenarios of Agent 3’s path is depicted below:
 
 - Green area represents the unblocked cells where the agent can go
+  
 - Red area represents the blocked cells
+  
 - Black spots are the ghosts that move around in the maze space
+  
 - Blue line represents the path the agent has taken
 
 ![New Note](https://github.com/pandaabhishek38/Ghost-in-the-maze/assets/56110423/91a0d280-517f-40d0-9e0a-d0d8a5083f94)
@@ -233,4 +236,45 @@ While Agent 4’s survivability for 220 ghosts is 0% and that of Agent 1 is 1% b
 Furthermore, if we look at the combined survivability graph of all the agents at the very last page of the report, we can determine that Agent 4 and Agent 5 have dominated and outperformed the first three agents most of the times.
 
 If we look at the approach, we have taken for Agent 1, Agents 2, and Agent 3, then we may notice one thing that while computing path for these agents, we have treated cells with ghosts as blocked cells and tried to find the shortest path around them. However, in our agent 4, we track ghosts in the 5X5 grid and actively try to move the agent 4 away from the ghost. This decision of moving away from the ghost instead of taking risk and proceeding with the shortest path seems to have contributed to Agent 4’s survivability. Hence, it performed better that Agent 1, 2, and 3.
+
+## 5. Agent 5
+
+We make our agent 5 based on the assumption that our agent loses sight of the ghost when it moves into a blocked cell. Our agent 5 is supposed to be better suited in this low information environment. We made our agent 5 similar to our agent 4. We make a 5 x 5 matrix around the agent and check for the existence of the ghost. If there are no ghosts in the grid, we make our next move based on the shortest path calculated using A* algorithm, considering the locations of the ghosts of course. But in case there is a ghost in the grid, we make our next move away from the ghost just like we did in case of agent 4.
+
+The difference between agent 4 and agent 5 is that the agent 4 can see all ghost’s location from the python dictionary containing locations of all agents, but agent 5 cannot see ghosts in walls.
+
+To implement “not seeing ghost in wall”, we track the ghost’s last seen location, that is, its location in an unblocked cell just before it entered a wall and use this location in our dictionary of ghosts. We then pass this list to the agent 4’s algorithm that checks ghost in a 5X5 grid around the agent. So, in case of agent 4, if there was a ghost in a wall inside the 5X5 grid, the algorithm would have still considered its correct location. But in case of agent 5, the same algorithm will now work on the ghost’s last seen location. Now, even if our 5X5 grid does not have the ghost’s exact location, it still knows the general area (top, bottom, top-right, top-left...) where the ghost might be and our agent tries to go away from that area and hence, from the ghost.
+
+Sample success case and failure case scenarios of Agent 5’s path is depicted below:
+- Green area represents the unblocked cells where the agent can go
+  
+- Red area represents the blocked cells
+  
+- Black spots are the ghosts that move around in the maze space
+  
+- Blue line represents the path the agent has taken
+
+![New Note](https://github.com/pandaabhishek38/Ghost-in-the-maze/assets/56110423/ee8e41c2-8e3a-4aaf-a539-8623d4ba78a9)
+
+[Output of the success and failure case is included in the zip file under Outputs folder]
+
+Varying ghosts from 10 to 220 by incrementing 10 ghosts and running the agent for 100 mazes, we get the below graph of Agent 5’s survivability
+
+![New Note](https://github.com/pandaabhishek38/Ghost-in-the-maze/assets/56110423/ef40f578-04e0-48c4-95a6-00c15d419bd8)
+
+Agent 5 starts with a survivability of 98% when the number of ghosts is 10. The survivability starts going down when we increment the number of ghosts. There is no change in chances of survival when we increment the number of ghosts to 20. It goes down by 9%, however, when we increase the number of ghosts to 30. Survivability goes down to 0% once we increase the number of ghosts to 220.
+
+# Comparison between different strategies:
+
+![New Note](https://github.com/pandaabhishek38/Ghost-in-the-maze/assets/56110423/758674ba-8fb0-4eff-82c1-599adfdbb65a)
+
+Agent 4 has the best survivability for 10 ghosts, at nearly 100%. It is followed by agent 5 at 98%. Agent 2 has survivability of 89% and agent 1 has a survivability of 86%. Agent 3 has the lowest survivability amongst all of them, at 80%.
+
+As we increase the number of ghosts, the survivability of each of the agents starts decreasing. Normally agent 4 is always better than all other agents, followed by agent 5, agent 2, agent 1 and agent 3 for almost any number of ghosts. However, this is not always true. In some cases, this order is changed. For example, when we increase the number of ghosts to 100, agent 2 has better survivability than agent 4 by 1%.
+
+The survivability of all the agents eventually converges to 0 as we keep increasing the number of ghosts. Survivability of agents 2, 4 and 5 goes down to 0% when we reach 220 ghosts. And in case of agent 1, the chance of survival goes down to 0% when we increase the number of ghosts to
+nearly 160 ghosts.
+
+Agent 3 takes a lot of time to iterate. We have not been able to take enough iterations, hence we could not collect enough data. Agent 3 goes down to 30% when we increment the number of ghosts to 50. Since we do not have further data, we have represented the survivability of agent 3 as 30 % for the remainder of the graph. It is expected to converge down to 0% when we keep increasing the number of ghosts.
+
 
