@@ -16,14 +16,14 @@ If the number is <= 0.72, we mark the cell as unblocked. Else, we mark it as blo
 4. Validate_maze() is called to validate the maze created in step 3. If there is a path from the start node to the end node, then validate_maze() returns true and maze creation is done. If it returns false, then we re-do the above steps from step-2 until we geet a ‘solvable’ maze.
 Since every auto-generated maze need not be a good maze, that is, there might be some mazes where it is impossible to reach the goal node (50,50) from the start node (0,0). We reject these mazes and generate another maze until we have a solvable maze. To validate whether there is a path from the start node to the end node, we used Depth-First Search (DFS) algorithm in the validate_maze() function.
 
-DFS vs Dijkstra’s algorithm
+#### DFS vs Dijkstra’s algorithm
 
 Let us first compare DFS and Dijkstra's algorithms according to our problem statement.
 In general, if we know that the endpoint (50,50) is far away from the start-point (0,0), DFS is a good strategy as it picks a path and proceed along that path until it ends or until we reach the goal node. Dijkstra's algorithm is in general a good way to find the shortest possible path.
 
 However, please note that the sole purpose of validating the maze is not to find the shortest path, but it is just to very whether the maze is solvable or not. So, as per the problem description, we chose DFS over Dijkstra’s algorithm to verify the maze.
 
-DFS vs BFS
+#### DFS vs BFS
 
 Breadth-Frist search is usually a good way to find a path, but it is considered better than DFS when the goal node is at a shallow level when compared to the entire environment over which we search. However, in our case, we know that the start node is at (0,0) and the goal node is at (50,50), that is, two points that cannot be further away from each other in our project’s environment. Because of this, choosing DFS over BFS is a better idea as BFS would take more time and it will first keep on expanding all the neighboring cells of the maze whereas we know that we need to go to the other end.
 
@@ -49,4 +49,24 @@ If the ghost enters the same cell as the agent, the agent will die. So, the aim 
 Please note that the agents and the ghosts can move only in vertical or horizontal directions.
 
 ## 3. AGENTS
+
+The agent is generated in the start node (0, 0) and the goal is to traverse through the maze only along the unblocked cells and try to reach the goal node (50, 50). To succeed, the agent must also not meet any ghosts in the maze while traversing. If both the ghost and the agent enter the same cell, the agent dies.
+
+In this project, we have used multiple strategies to achieve our goal. The agent makes use of these strategies to navigate the maze. The strategies have been implemented and data is collected through multiple iterations. We use this data to analyze each of our strategies and then compare the strategies with each other.
+
+We first make use of three different strategies as given in the project writeup, each making use of the previous one to improve its own approach. The fourth strategy is our own algorithm, which we developed based on an approach to avoid ghosts in the vicinity of the agent. As per the project writeup, we have to try to create the fourth agent to be better than the previous three agents. To analyze that, we have run the agents with varying number of ghosts for multiple iterations. We then create a fifth strategy to work in a more low-information environment and try to run all the first 4 agents in that low-info environment as well.
+
+# STRATEGIES
+
+## 1. Agent 1
+
+For agent 1, we calculate the shortest path from the start node to the goal node using A* algorithm by calling the calculate_path() function of the SearchPath class. Before the agent even starts moving in the maze, we calculate and store this shortest path. The agent 1 then blindly follows the derived shortest path while completely ignoring the ghosts in the maze. The negative aspect of this algorithm with respect to survivability of the agent is that the agent does not update its path if any ghost is nearby. Furthermore, the state of the maze changes at every step as all the ghosts move around. So, the further we go down the line, our original calculated shortest path’s accuracy decreases, and the agent might run into a ghost following the initial path.
+
+Sample success case and failure case scenarios of Agent 1’s path is depicted below:
+
+
+-Green area represents the unblocked cells where the agent can go
+-Red area represents the blocked cells
+-Black spots are the ghosts that move around in the maze space
+-Blue line represents the path the agent has taken
 
