@@ -81,3 +81,39 @@ Varying ghosts from 10 to 220 by incrementing 10 ghosts and running the agent fo
 
 ![Agent 1 Survivability Graph](https://github.com/pandaabhishek38/Ghost-in-the-maze/assets/56110423/e68c9ec3-8826-42f5-bde2-55b1776b0f1e)
 
+Agent 1 starts with survivability of 86% when the number of ghosts is 10. As we increase the number of ghosts, the survivability starts decreasing. We increase the number in increments of 10. For 20 ghosts, the survivability drops down to 63%. It goes further down to 41% when we increase the ghosts by 10 again. The survivability converges down to 0% when the number of ghosts is 160.
+
+## 2. Agent 2
+
+For Agent 2, the agent replans its path at every step based on the current positions of the ghosts. We are using A* algorithm in this agent by calling the same function calculate_path() of class SearchPath.
+
+This agent first calculates the shortest path from the start-point to the goal node before the agent start moving. However, unlike agent 1, this agent does not ignore the change of state and existence of the ghosts in the maze. After every step, this agent recalculates the shortest path from its current position to the end node.
+
+In order to avoid ghosts to some extent, we have treated the cells with ghosts in them as blocked cells too. Since we are treating the cells with ghosts as blocked cells, the A* algorithm tries to find the shortest possible path to the goal node without going through any of the cells which have ghost in them. If the agent 2 cannot find any path from its current node to the goal node, it stays in its place for that turn and hopes that a path will open up in the next turn.
+
+However, since the ghosts also move, this approach, too, is not the best one. This approach only considers the current state of the environment, but the environment changes as soon as the agent takes a step. So, the agent may still die by this approach, but survivability of agent 2 is expected to be better than that of agent 1.
+
+Why A* over Dijkstra’s?
+
+Since agent 2 performs shortest path search at every step, our shortest path finding algorithm needs to be good in order to reduce computation time. We chose A* over Dijkstra’s algorithm as our path finding algorithm because of the cell space that A* needs to determine and compute the shortest path from one node to another. While Dijkstra’s algorithm also finds the shortest path, but it traverses through all the nodes in the environment to find that path. On ther other hand, A* algorithm uses a heuristic to choose the enxt node and find the shortest path to the goal node. In doing so, the A* algorithm does not need to traverse through the entire maze’s environment and thus, is better than Dijkstra’s algorithm for our case.
+
+Sample success case and failure case scenarios of Agent 2’s path is depicted below:
+
+- Green area represents the unblocked cells where the agent can go
+ 
+- Red area represents the blocked cells
+
+- Black spots are the ghosts that move around in the maze space
+
+- Blue line represents the path the agent has taken
+
+![New Note](https://github.com/pandaabhishek38/Ghost-in-the-maze/assets/56110423/4974b3a4-339d-421d-a09c-b07c0f483c0c)
+
+[Output of the success and failure case is included in the zip file under Outputs folder]
+
+Varying ghosts from 10 to 220 by incrementing 10 ghosts and running the agent for 100 mazes, we get the below graph of Agent 2’s survivability
+
+![New Note](https://github.com/pandaabhishek38/Ghost-in-the-maze/assets/56110423/0aef7d7f-c796-4b9f-b8d5-9cd565b06ac1)
+
+Agent 2 starts with survivability of 89%, a 3% improvement compared to agent 1. As seen in the previous agent, the chances of survival starts decreasing as we increase the number of ghosts. It goes down to 73% when we increment the ghosts to 20. It goes down by a further 1% when we increase the number of ghosts to 30. It converges down to 0% when the number of ghosts are 220.
+
